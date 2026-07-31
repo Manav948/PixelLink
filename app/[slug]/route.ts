@@ -15,15 +15,22 @@ export async function GET(
                 undefined,
             userAgent: req.headers.get("user-agent") ?? undefined,
             referrer: req.headers.get("referer") ?? undefined,
-        })
-        return NextResponse.redirect(longUrl)
+        });
+
+        if (typeof longUrl !== "string") {
+            throw new Error("Short Url not found");
+        }
+
+        return NextResponse.redirect(longUrl);
     } catch (error) {
-        return NextResponse.json({
-            success: false,
-            message: "Short Url not found",
-        },
+        return NextResponse.json(
             {
-                status: 404
-            })
+                success: false,
+                message: "Short Url not found",
+            },
+            {
+                status: 404,
+            }
+        );
     }
 }

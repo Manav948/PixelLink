@@ -1,3 +1,4 @@
+import { cacheRepository } from "@/repositories/cache.repository";
 import { shortLinkRepository } from "@/repositories/shortLink.repository";
 import { createSlug } from "@/utils/slug";
 
@@ -28,18 +29,29 @@ export class ShortLinkService {
             referrer?: string,
         }
     ) {
+        const cachedUrl = await shortLinkRepository.findBySlug(slug);
+
+        if (cachedUrl) {
+            return cachedUrl
+        }
+
         const shortLink = await shortLinkRepository.findBySlug(slug);
         if (!shortLink) {
             throw new Error("Short Url not found");
         }
-        await shortLinkRepository.incrementClickCount(slug);
+        await cacheRepository.set(slug, shortLink.longUrl);
 
-        await shortLinkRepository.createClick({
-            shortLinkId: shortLink.id,
-            ipAddress: analytics.ipAddress,
-            userAgent: analytics.userAgent,
-            referrer: analytics.referrer,
-        })
+        await shortLinkRepository.incrementClickCount(slug);
+        try {
+            await shortLinkRepository.createClick({
+                shortLinkId: shortLink.id,
+                ipAddress: analytics.ipAddress,
+                userAgent: analytics.userAgent,
+                referrer: analytics.referrer,
+            })
+        } catch (error) {
+            console.error("Analytics Error:", error);
+        }
         return shortLink.longUrl;
     }
 }
