@@ -1,3 +1,4 @@
+import { clickQueue } from "@/queue/click.queue";
 import { cacheRepository } from "@/repositories/cache.repository";
 import { shortLinkRepository } from "@/repositories/shortLink.repository";
 import { createSlug } from "@/utils/slug";
@@ -41,13 +42,12 @@ export class ShortLinkService {
         }
         await cacheRepository.set(slug, shortLink.longUrl);
 
-        await shortLinkRepository.incrementClickCount(slug);
         try {
-            await shortLinkRepository.createClick({
+            await clickQueue.add("track-click", {
                 shortLinkId: shortLink.id,
                 ipAddress: analytics.ipAddress,
                 userAgent: analytics.userAgent,
-                referrer: analytics.referrer,
+                referrer: analytics.referrer
             })
         } catch (error) {
             console.error("Analytics Error:", error);

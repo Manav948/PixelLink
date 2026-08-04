@@ -6,12 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "worker": "tsx workers/click.worker.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.0",
     "@prisma/client": "^7.8.0",
     "@upstash/redis": "^1.38.0",
+    "bullmq": "^6.0.7",
+    "ioredis": "^6.0.0",
     "nanoid": "^6.0.0",
     "next": "16.2.10",
     "next-auth": "^4.24.14",
@@ -30,6 +33,7 @@
     "eslint-config-next": "16.2.10",
     "prisma": "^7.8.0",
     "tailwindcss": "^4",
+    "tsx": "^4.23.5",
     "typescript": "^5"
   }
 }

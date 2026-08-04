@@ -47,5 +47,17 @@ export class ShortLinkRepository {
             data
         })
     }
+    async incrementClickCountById(id: string) {
+        return  prisma.shortLink.update({
+            where : {
+                id
+            },
+            data : {
+                clickCount : {
+                    increment : 1
+                }
+            }
+        })
+    }
 }
 export const shortLinkRepository = new ShortLinkRepository();
