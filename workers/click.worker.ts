@@ -5,15 +5,14 @@ import { shortLinkRepository } from "@/repositories/shortLink.repository";
 new Worker("click-analytics", async (job) => {
     const { shortLinkId, ipAddress, userAgent, referrer } = job.data;
 
-    await shortLinkRepository.incrementClickCountById(shortLinkId);
-
-    await shortLinkRepository.createClick({
+    await shortLinkRepository.recordClick({
         shortLinkId,
         ipAddress,
         userAgent,
-        referrer
-    })
-    console.log(`processed click for ${shortLinkId}`)
+        referrer,
+    });
+
+    console.log(`Processed click for shortLinkId: ${shortLinkId}`);
 }, {
-    connection
-})
+    connection,
+});

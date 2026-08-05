@@ -8,29 +8,36 @@ export async function GET(
     try {
         const { slug } = await params;
 
+        const forwardedFor = req.headers.get("x-forwarded-for");
+        const clientIp = forwardedFor ? forwardedFor.split(",")[0].trim() : (req.headers.get("x-real-ip") ?? undefined);
+
         const longUrl = await shortLinkService.redirectToLongUrl(slug, {
-            ipAddress:
-                req.headers.get("x-forwarded-for") ??
-                req.headers.get("x-real-ip") ??
-                undefined,
+            ipAddress: clientIp,
             userAgent: req.headers.get("user-agent") ?? undefined,
             referrer: req.headers.get("referer") ?? undefined,
         });
 
-        if (typeof longUrl !== "string") {
-            throw new Error("Short Url not found");
+        return NextResponse.redirect(longUrl, 307);
+    } catch (error: any) {
+        const message = error?.message;
+
+        if (message === "SHORT_LINK_EXPIRED") {
+            return NextResponse.json(
+                { success: false, message: "This short link has expired" },
+                { status: 410 }
+            );
         }
 
-        return NextResponse.redirect(longUrl);
-    } catch (error) {
+        if (message === "SHORT_LINK_INACTIVE") {
+            return NextResponse.json(
+                { success: false, message: "This short link is currently inactive" },
+                { status: 410 }
+            );
+        }
+
         return NextResponse.json(
-            {
-                success: false,
-                message: "Short Url not found",
-            },
-            {
-                status: 404,
-            }
+            { success: false, message: "Short URL not found" },
+            { status: 404 }
         );
     }
-}
+}

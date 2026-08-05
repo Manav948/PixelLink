@@ -8,56 +8,67 @@ export class ShortLinkRepository {
                 slug,
             },
             select: {
-                id: true
-            }
-        })
-        return shortLink !== null
+                id: true,
+            },
+        });
+        return shortLink !== null;
     }
+
     async createShortLink(data: Prisma.ShortLinkCreateInput) {
         return await prisma.shortLink.create({
-            data
-        })
+            data,
+        });
     }
+
     async findBySlug(slug: string) {
         return await prisma.shortLink.findUnique({
             where: {
-                slug
-            }
-        })
+                slug,
+            },
+        });
     }
-    async incrementClickCount(slug: string) {
-        return await prisma.shortLink.update({
+
+    async recordClick(data: {
+        shortLinkId: string;
+        ipAddress?: string;
+        userAgent?: string;
+        referrer?: string;
+    }) {
+        return await prisma.$transaction([
+            prisma.shortLink.update({
+                where: { id: data.shortLinkId },
+                data: {
+                    clickCount: {
+                        increment: 1,
+                    },
+                },
+            }),
+            prisma.click.create({
+                data: {
+                    shortLinkId: data.shortLinkId,
+                    ipAddress: data.ipAddress,
+                    userAgent: data.userAgent,
+                    referrer: data.referrer,
+                },
+            }),
+        ]);
+    }
+
+    async getAnalyticsBySlug(slug: string) {
+        return await prisma.shortLink.findUnique({
             where: {
                 slug,
             },
-            data: {
-                clickCount: {
-                    increment: 1
-                }
-            }
-        })
-    }
-    async createClick(data: {
-        shortLinkId: string,
-        ipAddress?: string,
-        userAgent?: string,
-        referrer?: string,
-    }) {
-        return await prisma.click.create({
-            data
-        })
-    }
-    async incrementClickCountById(id: string) {
-        return  prisma.shortLink.update({
-            where : {
-                id
+            include: {
+                clicks: {
+                    orderBy: {
+                        clickedAt: "desc",
+                    },
+                    take: 100,
+                },
             },
-            data : {
-                clickCount : {
-                    increment : 1
-                }
-            }
-        })
+        });
     }
 }
-export const shortLinkRepository = new ShortLinkRepository();
+
+export const shortLinkRepository = new ShortLinkRepository();
