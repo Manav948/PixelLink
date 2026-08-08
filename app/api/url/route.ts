@@ -18,23 +18,34 @@ export async function POST(req: NextRequest) {
                     status: 400
                 });
         }
+
         const isSafe = await safetyService.isUrlSafe(result.data.url);
         if (!isSafe) {
             return NextResponse.json({
-                success : false, 
-                message : "Url blocked: This URL is considered unsafe and has been blocked."
+                success: false,
+                message: "Url blocked: This URL is considered unsafe and has been blocked."
             })
         }
 
-        const shortLinkUrl = await shortLinkService.generateUniqueSlug(
-            result.data.url
-        );
+        const shortLink = await shortLinkService.createShortLink({
+            longUrl: result.data.url,
+            customSlug: result.data.customSlug,
+            expiryDate: result.data.expiryDate
+        })
+
+        const origin = req.nextUrl.origin;
+        const shortLinkUrl = `${origin}/${shortLink.slug}`;
+
         return NextResponse.json({
             success: true,
-            data: shortLinkUrl
+            data: {
+                ...shortLink,
+                shortLinkurl: shortLinkUrl
+            }
         }, {
             status: 201
         })
+
     } catch (error) {
         console.log(error);
         return NextResponse.json({

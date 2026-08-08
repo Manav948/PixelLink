@@ -108,6 +108,41 @@ export class ShortLinkService {
             console.error("Analytics Queue Error:", error);
         }
     }
+    async createShortLink(params: { longUrl: string; customSlug?: string; expiryDate?: string }) {
+        const { longUrl, customSlug, expiryDate } = params
+        const expiryDateTime = expiryDate ? new Date(expiryDate) : undefined;
+
+        if(customSlug) {
+            const exists = await shortLinkRepository.existsBySlug(customSlug);
+            if(exists) {
+                throw new Error("CUSTOM_SLUG_ALREADY_EXISTS");
+            }
+            return await shortLinkRepository.createShortLink({
+                slug : customSlug,
+                longUrl,
+                expiryDate : expiryDateTime
+            })
+        }
+        let attempts = 0;
+        while(attempts < MAX_TRY) {
+            const slug = createSlug();
+            const exists = await shortLinkRepository.existsBySlug(slug)
+            if(!exists) {
+                try {
+                    return await shortLinkRepository.createShortLink({
+                        slug,
+                        longUrl,
+                        expiryDate : expiryDateTime
+                    })
+                } catch (error) {
+                    attempts++;
+                    continue;
+                }
+            }
+            attempts++;
+        }
+        throw new Error("Unable to generate unique slug. Please try again later.");
+    }
 }
 
-export const shortLinkService = new ShortLinkService();
+export const shortLinkService = new ShortLinkService();
