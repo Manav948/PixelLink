@@ -1,20 +1,48 @@
-import { Link2 } from "lucide-react";
+"use client";
+
+import { GitFork, BookOpen, LayoutGrid } from "lucide-react";
+import Link from "next/link";
+import { ThemeButton } from "../ui/ThemeButton";
 
 export function Navbar() {
     return (
-        <header className="w-full border-b border-zinc-800/60 bg-zinc-950/40 backdrop-blur-xl sticky top-0 z-50">
-            <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shadow-md shadow-indigo-500/10">
-                        <Link2 className="w-5 h-5" />
+        <header className="w-full bg-background/80 border-b border-border backdrop-blur-md z-30 transition-colors">
+            <div className="max-w-6xl mx-auto px-6 sm:px-8 h-14 flex items-center justify-between font-mono text-xs">
+                {/* Brand Logo matching Pixel Perfect title style */}
+                <Link href="/" className="flex items-center gap-2 text-foreground font-bold text-base tracking-tight hover:opacity-90 transition-opacity">
+                    <div className="w-6 h-6 bg-foreground text-background flex items-center justify-center rounded-sm font-black text-xs shadow-sm">
+                        P
                     </div>
-                    <span className="text-lg font-bold bg-linear-to-r from-zinc-100 via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
-                        TrimLink
+                    <span className="font-mono tracking-tighter text-lg font-extrabold uppercase">
+                        Pixel<span className="text-zinc-500">Link</span>
                     </span>
-                </div>
-                <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-xs font-medium">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    System Active
+                </Link>
+
+                {/* Right Action Icons */}
+                <div className="flex items-center gap-2">
+                    {/* Star counter badge */}
+                    <div className="flex items-center gap-2 bg-zinc-900/10 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-800 px-2.5 py-1.5 rounded-md text-foreground hover:border-zinc-500 transition-colors cursor-pointer">
+                        <GitFork className="w-3.5 h-3.5 text-zinc-500" />
+                        <span className="font-mono text-xs font-semibold">1,284</span>
+                    </div>
+
+                    {/* Action Icon Buttons */}
+                    <div className="flex items-center border border-zinc-300 dark:border-zinc-800 rounded-md bg-zinc-100/60 dark:bg-zinc-900/60 p-0.5">
+                        <button 
+                            className="p-1.5 text-zinc-500 dark:text-zinc-400 hover:text-foreground hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded transition-colors"
+                            title="Toggle Grid Overlay"
+                        >
+                            <LayoutGrid className="w-3.5 h-3.5" />
+                        </button>
+                        <button 
+                            className="p-1.5 text-zinc-500 dark:text-zinc-400 hover:text-foreground hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded transition-colors"
+                            title="API Documentation"
+                        >
+                            <BookOpen className="w-3.5 h-3.5" />
+                        </button>
+                        {/* Interactive Radial Wave Theme Button */}
+                        <ThemeButton />
+                    </div>
                 </div>
             </div>
         </header>
