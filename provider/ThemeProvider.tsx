@@ -1,66 +1,65 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { CircularThemeOverlay } from "@/components/ui/CircularThemeOverlay";
 
 type Theme = "dark" | "light";
 
 interface ThemeContextType {
     theme: Theme;
-    toggleTheme: () => void;
-    isAnimating: boolean;
+    toggleTheme: (e?: React.MouseEvent) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+function applyThemeClass(t: Theme) {
+    if (t === "dark") {
+        document.documentElement.classList.add("dark");
+    } else {
+        document.documentElement.classList.remove("dark");
+    }
+}
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const [theme, setTheme] = useState<Theme>("dark");
-    const [isAnimating, setIsAnimating] = useState(false);
-    const [targetTheme, setTargetTheme] = useState<Theme | null>(null);
 
+    // Apply stored theme once on mount (no flash because we default to dark)
     useEffect(() => {
-        // Load saved theme or default to dark
-        const savedTheme = localStorage.getItem("theme") as Theme | null;
-        const initialTheme = savedTheme || "dark";
-        setTheme(initialTheme);
-
-        if (initialTheme === "dark") {
-            document.documentElement.classList.add("dark");
-        } else {
-            document.documentElement.classList.remove("dark");
-        }
+        const saved = (localStorage.getItem("theme") as Theme) || "dark";
+        setTheme(saved);
+        applyThemeClass(saved);
     }, []);
 
-    const toggleTheme = () => {
-        if (isAnimating) return;
-
+    const toggleTheme = (e?: React.MouseEvent) => {
         const nextTheme: Theme = theme === "dark" ? "light" : "dark";
-        setTargetTheme(nextTheme);
-        setIsAnimating(true);
 
-        // Halfway through circle animation, apply theme change
-        setTimeout(() => {
+        // Store exact click position as CSS custom properties on :root so the
+        // @keyframes vt-circle-expand can use them as the clip-path origin.
+        const x = e ? e.clientX : window.innerWidth / 2;
+        const y = e ? e.clientY : window.innerHeight / 2;
+        document.documentElement.style.setProperty("--vt-x", `${x}px`);
+        document.documentElement.style.setProperty("--vt-y", `${y}px`);
+
+        // View Transitions API the browser takes a screenshot of the current
+        // page, then we mutate the DOM, and the API cross-fades using our CSS.
+        // This happens entirely at compositor level: zero React blank frames.
+        if (typeof document !== "undefined" && "startViewTransition" in document) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (document as any).startViewTransition(() => {
+                setTheme(nextTheme);
+                applyThemeClass(nextTheme);
+                localStorage.setItem("theme", nextTheme);
+            });
+        } else {
+            // Graceful fallback for browsers without View Transitions support
             setTheme(nextTheme);
+            applyThemeClass(nextTheme);
             localStorage.setItem("theme", nextTheme);
-
-            if (nextTheme === "dark") {
-                document.documentElement.classList.add("dark");
-            } else {
-                document.documentElement.classList.remove("dark");
-            }
-        }, 350);
-
-        // Reset animation state when transition finishes
-        setTimeout(() => {
-            setIsAnimating(false);
-            setTargetTheme(null);
-        }, 750);
+        }
     };
 
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme, isAnimating }}>
+        <ThemeContext.Provider value={{ theme, toggleTheme }}>
             {children}
-            <CircularThemeOverlay isAnimating={isAnimating} targetTheme={targetTheme} />
         </ThemeContext.Provider>
     );
 }

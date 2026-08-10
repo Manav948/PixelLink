@@ -26,7 +26,7 @@
 .dark {
   --background: #030303;
   --foreground: #f4f4f5;
-  --card: #09090b;
+  --card: #08080a;
   --card-foreground: #f4f4f5;
   --primary: #ffffff;
   --primary-foreground: #000000;
@@ -58,28 +58,31 @@
     background-color: var(--background);
     color: var(--foreground);
     overflow-x: hidden;
-    transition: background-color 0.3s ease, color 0.3s ease;
   }
 }
 
-/* Radial Circle Wave Animation */
-@keyframes circleExpand {
-  0% {
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 1;
-  }
-  80% {
-    transform: translate(-50%, -50%) scale(2.8);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(3.2);
-    opacity: 0;
-  }
+/* ─── View Transitions API: Circular Ripple from Click Origin ─────────────── */
+
+/* Freeze the outgoing (old) snapshot — no animation, it just sits there */
+::view-transition-old(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
-.animate-circle-expand {
-  animation: circleExpand 0.75s ease-in-out forwards;
+/* Expand the incoming (new) snapshot from the cursor position */
+::view-transition-new(root) {
+  animation: vt-circle-expand 2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  mix-blend-mode: normal;
+}
+
+@keyframes vt-circle-expand {
+  from {
+    /* --vt-x and --vt-y are set imperatively from the click event in ThemeProvider */
+    clip-path: circle(0px at var(--vt-x, 50%) var(--vt-y, 50%));
+  }
+  to {
+    clip-path: circle(200vmax at var(--vt-x, 50%) var(--vt-y, 50%));
+  }
 }
 
 /* Custom Scrollbar */

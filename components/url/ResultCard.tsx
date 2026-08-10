@@ -25,7 +25,7 @@ export function ResultCard({ result }: ResultCardProps) {
 
     return (
         <div className="w-full max-w-2xl mx-auto mt-6 bg-card border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 shadow-2xl relative transition-colors duration-300 animate-in fade-in slide-in-from-bottom-3">
-            {/* Technical HUD Corner Markers */}
+           
             <div className="absolute -top-1 -left-1 w-2 h-2 border-t-2 border-l-2 border-emerald-500" />
             <div className="absolute -top-1 -right-1 w-2 h-2 border-t-2 border-r-2 border-emerald-500" />
             <div className="absolute -bottom-1 -left-1 w-2 h-2 border-b-2 border-l-2 border-emerald-500" />
@@ -38,7 +38,7 @@ export function ResultCard({ result }: ResultCardProps) {
                 <span className="text-zinc-500 font-mono">STATUS: 200_OK</span>
             </div>
 
-            {/* Main Result Display Box */}
+           
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-zinc-100 dark:bg-black/90 border border-zinc-300 dark:border-zinc-800 rounded-lg p-2.5 pl-4">
                 <span className="text-xs font-mono font-medium text-foreground truncate flex-1 select-all">
                     {result.shortUrl}
@@ -69,7 +69,7 @@ export function ResultCard({ result }: ResultCardProps) {
                 </div>
             </div>
 
-            {/* Destination URL */}
+           
             <div className="mt-3 text-left font-mono text-[11px] text-zinc-500 truncate">
                 <span className="text-zinc-500 dark:text-zinc-600 font-semibold">TARGET: </span>
                 <span className="text-zinc-700 dark:text-zinc-300 italic">{result.longUrl}</span>

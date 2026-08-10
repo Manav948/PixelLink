@@ -30,15 +30,14 @@ export default function Home() {
 
     return (
         <div className="min-h-screen flex flex-col bg-background text-foreground font-sans relative overflow-x-hidden transition-colors duration-300 selection:bg-foreground selection:text-background">
-            {/* Grid Overlay Background */}
+         
             <div className="absolute inset-0 bg-pixel-grid opacity-60 pointer-events-none z-0" />
 
-            {/* Faint Center Watermark Emblem */}
+       
             <div className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 font-mono font-black text-[320px] text-zinc-500/10 pointer-events-none select-none z-0">
                 P
             </div>
 
-            {/* Technical HUD Overlay Coordinates */}
             <div className="hidden sm:block absolute top-16 left-6 font-mono text-[11px] text-zinc-500 z-10 pointer-events-none select-none">
                 x:{mouseCoords.x}, y:{mouseCoords.y} <br />
                 fps: 60 | ms: 16.6
@@ -56,13 +55,12 @@ export default function Home() {
                 cell:9,2
             </div>
 
-            {/* Top Navigation */}
+           
             <Navbar />
 
-            {/* Main Content */}
+          
             <main className="flex-1 max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20 flex flex-col items-center justify-center text-center relative z-10">
-                
-                {/* Hero Title & Typography */}
+           
                 <div className="space-y-4 mb-10 max-w-3xl">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900/10 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 text-foreground font-mono text-xs mb-2">
                         <Terminal className="w-3.5 h-3.5 text-zinc-400" />
@@ -78,7 +76,7 @@ export default function Home() {
                         A pixel-perfect, ultra-fast URL shortener built for modern web apps. Powered by Redis caching & real-time analytics.
                     </p>
 
-                    {/* Quick Button Group */}
+                   
                     <div className="flex items-center justify-center gap-3 pt-3">
                         <button
                             onClick={() => {
@@ -90,7 +88,7 @@ export default function Home() {
                             Shorten URL Now
                         </button>
                         <a
-                            href="https://github.com"
+                            href="https://github.com/Manav948/url-shortener"
                             target="_blank"
                             rel="noreferrer"
                             className="bg-zinc-100 dark:bg-[#0c0c0e] border border-zinc-300 dark:border-zinc-800 text-foreground hover:bg-zinc-200 dark:hover:bg-zinc-800 font-mono text-xs px-4 py-2.5 rounded-md flex items-center gap-2 transition-all"
@@ -101,14 +99,13 @@ export default function Home() {
                     </div>
                 </div>
 
-                {/* Form & Result Card */}
+               
                 <div className="w-full mt-2">
                     <ShortForm onSuccess={(data) => setResult(data)} />
                     {result && <ResultCard result={result} />}
                 </div>
             </main>
 
-            {/* Footer */}
             <Footer />
         </div>
     );

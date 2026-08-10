@@ -15,7 +15,7 @@ export function CircularThemeOverlay({ isAnimating, targetTheme }: CircularTheme
     return (
         <div
             aria-hidden="true"
-            className={`fixed top-1/2 left-1/2 w-[120vw] h-[120vw] rounded-full pointer-events-none z-9999 animate-circle-expand ${colorClass}`}
+            className={`fixed top-1/2 left-1/2 w-[120vw] h-[120vw] rounded-full pointer-events-none z-99999 animate-smooth-circle ${colorClass}`}
         />
     );
 }

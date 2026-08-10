@@ -73,7 +73,7 @@ export function ShortForm({ onSuccess }: ShortenFormProps) {
             <Plus className="absolute -bottom-2 -right-2 w-4 h-4 text-zinc-400 dark:text-zinc-600 z-10 pointer-events-none" />
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                {/* Destination URL Input */}
+              
                 <div className="space-y-1.5 text-left">
                     <div className="flex items-center justify-between text-xs font-mono text-zinc-500 dark:text-zinc-400">
                         <span>// DESTINATION_URL</span>
@@ -90,7 +90,7 @@ export function ShortForm({ onSuccess }: ShortenFormProps) {
                     )}
                 </div>
 
-                {/* Advanced Custom Options Toggle Bar */}
+                
                 <div
                     onClick={() => setShowAdvanced(!showAdvanced)}
                     className="w-full bg-zinc-100 dark:bg-[#0c0c0e] border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 rounded-lg p-3 flex items-center justify-between cursor-pointer transition-all group select-none"
@@ -104,7 +104,7 @@ export function ShortForm({ onSuccess }: ShortenFormProps) {
                     </span>
                 </div>
 
-                {/* Custom Alias Input */}
+            
                 {showAdvanced && (
                     <div className="pt-1 space-y-1.5 text-left animate-in fade-in slide-in-from-top-2 duration-150">
                         <div className="flex items-center justify-between text-xs font-mono text-zinc-500 dark:text-zinc-400">
@@ -125,7 +125,7 @@ export function ShortForm({ onSuccess }: ShortenFormProps) {
                     </div>
                 )}
 
-                {/* Full-width Action Button */}
+        
                 <div className="pt-2">
                     <Button
                         type="submit"
@@ -137,7 +137,7 @@ export function ShortForm({ onSuccess }: ShortenFormProps) {
                 </div>
             </form>
 
-            {/* Feature Badges */}
+           
             <div className="mt-6 pt-4 border-t border-zinc-200 dark:border-zinc-800/70 flex flex-wrap items-center justify-between text-[11px] font-mono text-zinc-500 dark:text-zinc-500">
                 <span className="flex items-center gap-1.5">
                     <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" /> Anti-Phishing Scan
