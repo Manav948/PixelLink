@@ -33,22 +33,6 @@
   --border: rgba(255, 255, 255, 0.08);
 }
 
-@layer utilities {
-  .bg-pixel-grid {
-    background-size: 60px 60px;
-    background-image: 
-      linear-gradient(to right, rgba(120, 120, 120, 0.08) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(120, 120, 120, 0.08) 1px, transparent 1px);
-  }
-
-  .dark .bg-pixel-grid {
-    background-size: 60px 60px;
-    background-image: 
-      linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  }
-}
-
 @layer base {
   * {
     border-color: var(--border);
@@ -61,23 +45,20 @@
   }
 }
 
-/* ─── View Transitions API: Circular Ripple from Click Origin ─────────────── */
-
-/* Freeze the outgoing (old) snapshot — no animation, it just sits there */
+/* ─── View Transitions API: Slow Circular Ripple from Click Origin ─── */
 ::view-transition-old(root) {
   animation: none;
   mix-blend-mode: normal;
 }
 
-/* Expand the incoming (new) snapshot from the cursor position */
 ::view-transition-new(root) {
-  animation: vt-circle-expand 2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  /* 3s — slow, luxurious, clear expansion */
+  animation: vt-circle-expand 3s cubic-bezier(0.16, 1, 0.3, 1) both;
   mix-blend-mode: normal;
 }
 
 @keyframes vt-circle-expand {
   from {
-    /* --vt-x and --vt-y are set imperatively from the click event in ThemeProvider */
     clip-path: circle(0px at var(--vt-x, 50%) var(--vt-y, 50%));
   }
   to {
@@ -85,15 +66,79 @@
   }
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* ─── Animated Checkerboard Grid ─────────────────────────────────── */
+@keyframes gridDrift {
+  0%   { background-position: 0px 0px,   0px 0px,   0px 0px;   }
+  100% { background-position: 80px 80px, 80px 80px, 80px 80px; }
 }
-::-webkit-scrollbar-track {
-  background: var(--background);
+
+/* Light mode animated grid */
+.animated-grid {
+  background-image:
+    /* Hard grid lines */
+    linear-gradient(rgba(0, 0, 0, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.07) 1px, transparent 1px),
+    /* Checkerboard alternating cells */
+    repeating-conic-gradient(
+      rgba(0, 0, 0, 0.035) 0% 25%,
+      transparent 0% 50%
+    );
+  background-size: 80px 80px, 80px 80px, 80px 80px;
+  animation: gridDrift 28s linear infinite;
 }
-::-webkit-scrollbar-thumb {
-  background: #3f3f46;
-  border-radius: 3px;
+
+/* Dark mode animated grid */
+.dark .animated-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.10) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.10) 1px, transparent 1px),
+    repeating-conic-gradient(
+      rgba(255, 255, 255, 0.06) 0% 25%,
+      transparent 0% 50%
+    );
+  background-size: 80px 80px, 80px 80px, 80px 80px;
+  animation: gridDrift 28s linear infinite;
 }
+
+/* ─── Rainbow Moving Border Button ───────────────────────────────── */
+@keyframes rainbowSpin {
+  0%   { background-position: 0% 50%;   }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%;   }
+}
+
+.rainbow-border-btn {
+  position: relative;
+  isolation: isolate;
+}
+
+.rainbow-border-btn::before {
+  content: '';
+  position: absolute;
+  inset: -1.5px;
+  border-radius: inherit;
+  z-index: -1;
+  background: linear-gradient(
+    90deg,
+    #ff0080, #ff8c00, #ffe000,
+    #40e0d0, #0080ff, #a855f7,
+    #ff0080, #ff8c00
+  );
+  background-size: 300% 100%;
+  animation: rainbowSpin 3.5s linear infinite;
+}
+
+.rainbow-border-btn::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  z-index: -1;
+  background-color: var(--card);
+  background: var(--card);
+}
+
+/* ─── Custom Scrollbar ───────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--background); }
+::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }

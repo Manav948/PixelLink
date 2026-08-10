@@ -21,12 +21,6 @@ export function Navbar() {
              
                 <div className="flex items-center gap-2">
                     
-                    <div className="flex items-center gap-2 bg-zinc-900/10 dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-800 px-2.5 py-1.5 rounded-md text-foreground hover:border-zinc-500 transition-colors cursor-pointer">
-                        <GitFork className="w-3.5 h-3.5 text-zinc-500" />
-                        <span className="font-mono text-xs font-semibold">1,284</span>
-                    </div>
-
-              
                     <div className="flex items-center border border-zinc-300 dark:border-zinc-800 rounded-md bg-zinc-100/60 dark:bg-zinc-900/60 p-0.5">
                         <button 
                             className="p-1.5 text-zinc-500 dark:text-zinc-400 hover:text-foreground hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded transition-colors"

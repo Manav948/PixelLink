@@ -5,6 +5,7 @@ import { Navbar } from "@/components/navbar/Navbar";
 import { ShortForm } from "@/components/url/ShortenForm";
 import { ResultCard } from "@/components/url/ResultCard";
 import { Footer } from "@/components/footer/Footer";
+import { AnimatedGrid } from "@/components/ui/AnimatedGrid";
 import { Terminal } from "lucide-react";
 
 function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -29,55 +30,55 @@ export default function Home() {
     }, []);
 
     return (
-        <div className="min-h-screen flex flex-col bg-background text-foreground font-sans relative overflow-x-hidden transition-colors duration-300 selection:bg-foreground selection:text-background">
-         
-            <div className="absolute inset-0 bg-pixel-grid opacity-60 pointer-events-none z-0" />
+        <div className="min-h-screen flex flex-col bg-background text-foreground font-sans relative overflow-x-hidden selection:bg-foreground selection:text-background">
+           
+            <AnimatedGrid className="opacity-70" />
 
-       
-            <div className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 font-mono font-black text-[320px] text-zinc-500/10 pointer-events-none select-none z-0">
+          
+            <div className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 font-mono font-black text-[320px] text-zinc-500/4 pointer-events-none select-none z-0">
                 P
             </div>
 
-            <div className="hidden sm:block absolute top-16 left-6 font-mono text-[11px] text-zinc-500 z-10 pointer-events-none select-none">
-                x:{mouseCoords.x}, y:{mouseCoords.y} <br />
+            
+            <div className="hidden sm:block absolute top-16 left-6 font-mono text-[11px] text-zinc-400/60 z-10 pointer-events-none select-none">
+                x:{mouseCoords.x}, y:{mouseCoords.y}<br />
                 fps: 60 | ms: 16.6
             </div>
-
-            <div className="hidden sm:block absolute top-16 right-6 font-mono text-[11px] text-zinc-500 text-right z-10 pointer-events-none select-none">
+            <div className="hidden sm:block absolute top-16 right-6 font-mono text-[11px] text-zinc-400/60 text-right z-10 pointer-events-none select-none">
                 v:2.4.0 a:↓
             </div>
-
-            <div className="hidden sm:block absolute bottom-14 left-6 font-mono text-[11px] text-zinc-500 z-10 pointer-events-none select-none">
+            <div className="hidden sm:block absolute bottom-14 left-6 font-mono text-[11px] text-zinc-400/60 z-10 pointer-events-none select-none">
                 0:74.9°
             </div>
-
-            <div className="hidden sm:block absolute bottom-14 right-6 font-mono text-[11px] text-zinc-500 text-right z-10 pointer-events-none select-none">
+            <div className="hidden sm:block absolute bottom-14 right-6 font-mono text-[11px] text-zinc-400/60 text-right z-10 pointer-events-none select-none">
                 cell:9,2
             </div>
 
            
             <Navbar />
 
-          
+            
             <main className="flex-1 max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20 flex flex-col items-center justify-center text-center relative z-10">
-           
                 <div className="space-y-4 mb-10 max-w-3xl">
+                  
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900/10 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 text-foreground font-mono text-xs mb-2">
                         <Terminal className="w-3.5 h-3.5 text-zinc-400" />
                         <span>PIXEL-PERFECT URL ENGINE</span>
                     </div>
 
-                    <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-foreground tracking-tighter leading-[1.05] font-sans">
+                  
+                    <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-foreground tracking-tighter leading-[1.05]">
                         Shorten Long <br />
                         Links in seconds
                     </h1>
 
-                    <p className="text-sm sm:text-base text-zinc-500 dark:text-zinc-400 font-normal max-w-lg mx-auto leading-relaxed pt-2">
+                    <p className="text-sm sm:text-base text-zinc-500 dark:text-zinc-400 max-w-lg mx-auto leading-relaxed pt-2">
                         A pixel-perfect, ultra-fast URL shortener built for modern web apps. Powered by Redis caching & real-time analytics.
                     </p>
 
-                   
+                  
                     <div className="flex items-center justify-center gap-3 pt-3">
+                        
                         <button
                             onClick={() => {
                                 const inputEl = document.querySelector("input") as HTMLInputElement;
@@ -87,19 +88,21 @@ export default function Home() {
                         >
                             Shorten URL Now
                         </button>
+
+                        
                         <a
                             href="https://github.com/Manav948/url-shortener"
                             target="_blank"
                             rel="noreferrer"
-                            className="bg-zinc-100 dark:bg-[#0c0c0e] border border-zinc-300 dark:border-zinc-800 text-foreground hover:bg-zinc-200 dark:hover:bg-zinc-800 font-mono text-xs px-4 py-2.5 rounded-md flex items-center gap-2 transition-all"
+                            className="rainbow-border-btn font-mono text-xs px-4 py-2.5 rounded-md flex items-center gap-2 transition-all text-foreground font-semibold"
                         >
-                            <span>Star On Github</span>
+                            <span>Star on GitHub</span>
                             <GithubIcon className="w-3.5 h-3.5" />
                         </a>
                     </div>
                 </div>
 
-               
+              
                 <div className="w-full mt-2">
                     <ShortForm onSuccess={(data) => setResult(data)} />
                     {result && <ResultCard result={result} />}

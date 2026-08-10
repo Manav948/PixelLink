@@ -3,6 +3,31 @@
 import React from "react";
 import { useTheme } from "@/provider/ThemeProvider";
 
+function MoonIcon() {
+    return (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" />
+        </svg>
+    );
+}
+
+function SunIcon() {
+    return (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="4" fill="currentColor" stroke="none" />
+          
+            <line x1="12" y1="2"  x2="12" y2="5"  />
+            <line x1="12" y1="19" x2="12" y2="22" />
+            <line x1="2"  y1="12" x2="5"  y2="12" />
+            <line x1="19" y1="12" x2="22" y2="12" />
+            <line x1="4.22"  y1="4.22"  x2="6.34"  y2="6.34"  />
+            <line x1="17.66" y1="17.66" x2="19.78" y2="19.78" />
+            <line x1="19.78" y1="4.22"  x2="17.66" y2="6.34"  />
+            <line x1="6.34"  y1="17.66" x2="4.22"  y2="19.78" />
+        </svg>
+    );
+}
+
 export function ThemeButton() {
     const { theme, toggleTheme } = useTheme();
     const isDark = theme === "dark";
@@ -11,36 +36,31 @@ export function ThemeButton() {
         <button
             onClick={(e) => toggleTheme(e)}
             type="button"
-            className="relative p-2 text-zinc-400 hover:text-foreground hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md transition-colors focus:outline-none cursor-pointer"
+            aria-label={`Switch to ${isDark ? "Light" : "Dark"} Mode`}
             title={`Switch to ${isDark ? "Light" : "Dark"} Mode`}
-            aria-label="Toggle Theme"
+            className="relative w-8 h-8 flex items-center justify-center rounded-md text-zinc-500 dark:text-zinc-400 hover:text-foreground hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors overflow-hidden"
         >
-            <svg
-                width={18}
-                height={18}
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                className={`transition-transform duration-700 ease-out ${isDark ? "rotate-40" : "rotate-90"}`}
+            <span
+                className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-in-out"
+                style={{
+                    opacity:    isDark ? 1 : 0,
+                    transform:  isDark ? "translateY(0) scale(1) rotate(0deg)" : "translateY(-10px) scale(0.5) rotate(-30deg)",
+                    pointerEvents: "none",
+                }}
             >
-                <mask id="moon-mask">
-                    <rect x={0} y={0} width={20} height={20} fill="white" />
-                    <circle cx={11} cy={3} r={8} fill="black" />
-                </mask>
-                <circle
-                    cx={10}
-                    cy={10}
-                    r={8}
-                    mask="url(#moon-mask)"
-                />
-                <g className={`transition-all duration-500 origin-center ${isDark ? "opacity-0 scale-0" : "opacity-100 scale-100"}`}>
-                    <circle cx={18} cy={10} r="1.5" />
-                    <circle cx={14} cy={16.928} r="1.5" />
-                    <circle cx={6} cy={16.928} r="1.5" />
-                    <circle cx={2} cy={10} r="1.5" />
-                    <circle cx={6} cy={3.1718} r="1.5" />
-                    <circle cx={14} cy={3.1718} r="1.5" />
-                </g>
-            </svg>
+                <MoonIcon />
+            </span>
+
+            <span
+                className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-in-out"
+                style={{
+                    opacity:    isDark ? 0 : 1,
+                    transform:  isDark ? "translateY(10px) scale(0.5) rotate(30deg)" : "translateY(0) scale(1) rotate(0deg)",
+                    pointerEvents: "none",
+                }}
+            >
+                <SunIcon />
+            </span>
         </button>
     );
 }
