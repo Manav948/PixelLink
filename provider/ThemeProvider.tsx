@@ -21,6 +21,7 @@ function applyThemeClass(t: Theme) {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const [theme, setTheme] = useState<Theme>("dark");
+    const isTransitioning = React.useRef(false);
 
     // Apply stored theme once on mount (no flash because we default to dark)
     useEffect(() => {
@@ -30,6 +31,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const toggleTheme = (e?: React.MouseEvent) => {
+        // Prevent overlapping transitions (common on mobile double-tap)
+        if (isTransitioning.current) return;
+
         const nextTheme: Theme = theme === "dark" ? "light" : "dark";
 
         // Store exact click position as CSS custom properties on :root so the
@@ -39,15 +43,25 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         document.documentElement.style.setProperty("--vt-x", `${x}px`);
         document.documentElement.style.setProperty("--vt-y", `${y}px`);
 
-        // View Transitions API the browser takes a screenshot of the current
+        // View Transitions API: the browser takes a screenshot of the current
         // page, then we mutate the DOM, and the API cross-fades using our CSS.
         // This happens entirely at compositor level: zero React blank frames.
         if (typeof document !== "undefined" && "startViewTransition" in document) {
+            isTransitioning.current = true;
+            // Safety unlock — slightly longer than the 0.65s CSS animation
+            const unlockTimer = setTimeout(() => { isTransitioning.current = false; }, 750);
+
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (document as any).startViewTransition(() => {
+            const transition = (document as any).startViewTransition(() => {
                 setTheme(nextTheme);
                 applyThemeClass(nextTheme);
                 localStorage.setItem("theme", nextTheme);
+            });
+
+            // Unlock as soon as the transition actually finishes
+            transition.finished.finally(() => {
+                clearTimeout(unlockTimer);
+                isTransitioning.current = false;
             });
         } else {
             // Graceful fallback for browsers without View Transitions support

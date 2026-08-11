@@ -45,16 +45,19 @@
   }
 }
 
-/* ─── View Transitions API: Slow Circular Ripple from Click Origin ─── */
+/* ─── View Transitions API: Circular Ripple from Click Origin ─── */
 ::view-transition-old(root) {
   animation: none;
   mix-blend-mode: normal;
 }
 
 ::view-transition-new(root) {
-  /* 3s — slow, luxurious, clear expansion */
-  animation: vt-circle-expand 3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  /* 0.65s — fast enough to feel snappy on mobile, still visible on desktop */
+  animation: vt-circle-expand 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
   mix-blend-mode: normal;
+  /* Promote to its own compositor layer so clip-path repaints stay isolated */
+  will-change: clip-path;
+  contain: strict;
 }
 
 @keyframes vt-circle-expand {
@@ -63,6 +66,14 @@
   }
   to {
     clip-path: circle(200vmax at var(--vt-x, 50%) var(--vt-y, 50%));
+  }
+}
+
+/* Disable transition for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
   }
 }
 
