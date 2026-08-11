@@ -23,7 +23,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const [theme, setTheme] = useState<Theme>("dark");
     const isTransitioning = React.useRef(false);
 
-    // Apply stored theme once on mount (no flash because we default to dark)
+    // Apply stored theme once on mount
     useEffect(() => {
         const saved = (localStorage.getItem("theme") as Theme) || "dark";
         setTheme(saved);
@@ -48,8 +48,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         // This happens entirely at compositor level: zero React blank frames.
         if (typeof document !== "undefined" && "startViewTransition" in document) {
             isTransitioning.current = true;
-            // Safety unlock — slightly longer than the 0.65s CSS animation
-            const unlockTimer = setTimeout(() => { isTransitioning.current = false; }, 750);
+            // Safety unlock — slightly longer than the 1.1s CSS animation
+            const unlockTimer = setTimeout(() => { isTransitioning.current = false; }, 1200);
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const transition = (document as any).startViewTransition(() => {
